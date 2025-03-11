@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, Float
 from sqlalchemy.orm import declarative_base, relationship
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
@@ -6,7 +6,6 @@ hook = PostgresHook(postgres_conn_id="postgres_dw")
 engine_dw = hook.get_sqlalchemy_engine()
 
 Base = declarative_base()
-
 
 class DClientes(Base):
     __tablename__ = 'dClientes'
@@ -21,6 +20,7 @@ class DClientes(Base):
     faixa_etaria = Column(String(500))
 
     acessos = relationship("FAcessos", back_populates="cliente")
+    
 
 class DCalendar(Base):
     __tablename__ = 'dCalendar'
@@ -33,6 +33,21 @@ class DCalendar(Base):
     weekDay = Column(String(100))
 
     acessos = relationship("FAcessos", back_populates="dCalendar")
+    wellhub = relationship("DGymWellhub", back_populates="dCalendar")
+
+class DGymWellhub(Base):
+    __tablename__ = 'dGymWellhub'
+    idGym = Column(Integer, autoincrement=True, primary_key=True)
+    Date = Column(Date, ForeignKey("dCalendar.date"), nullable=False)
+    Name = Column(String(500))
+    Address = Column(String(500))
+    Services = Column(String(500))
+    Comorbidities = Column(String(500))
+    BasePlan = Column(String(500))
+    ValuePlan = Column(Float)
+
+    dCalendar = relationship("DCalendar", back_populates="wellhub")
+    
 
 class FAcessos(Base):
     __tablename__ = 'fAcessos'
@@ -43,7 +58,6 @@ class FAcessos(Base):
 
     dCalendar = relationship("DCalendar", back_populates="acessos")
     cliente = relationship("DClientes", back_populates="acessos")
-
 
 def create_tables():
     Base.metadata.create_all(bind=engine_dw)
