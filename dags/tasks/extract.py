@@ -8,10 +8,9 @@ def extract():
         "Bairro", "Cidade"
     ]
 
-    clientes = pd.read_csv("include/data/clientes.csv", sep=",", usecols=colunas)
-
-    # Caminho onde estão os arquivos (coloque o caminho correto da sua pasta)
     caminho = 'include/data/'  # Diretório atual ou o caminho onde estão os arquivos
+
+    clientes = pd.read_csv(f"{caminho}clientes.csv", sep=",", usecols=colunas)
 
     # Busca todos os arquivos que seguem o padrão "acessos-*.csv"
     arquivos = glob.glob(f'{caminho}acessos-*.csv')
@@ -27,6 +26,8 @@ def extract():
     # Junta todos os DataFrames em um só
     acessos = pd.concat(dfs, ignore_index=True)
 
+    wellhub = pd.read_csv(f"{caminho}gym-wellhub.csv", sep=",")
 
 
-    return clientes, acessos
+
+    return clientes, acessos, wellhub

@@ -37,14 +37,14 @@ class DCalendar(Base):
 
 class DGymWellhub(Base):
     __tablename__ = 'dGymWellhub'
-    idGym = Column(Integer, autoincrement=True, primary_key=True)
-    Date = Column(Date, ForeignKey("dCalendar.date"), nullable=False)
-    Name = Column(String(500))
-    Address = Column(String(500))
-    Services = Column(String(500))
-    Comorbidities = Column(String(500))
-    BasePlan = Column(String(500))
-    ValuePlan = Column(Float)
+    id_gym = Column(Integer, autoincrement=True, primary_key=True)
+    data = Column(Date, ForeignKey("dCalendar.date"), nullable=False)
+    nome = Column(String(1000))
+    endereco = Column(String(1000))
+    servicos = Column(String(1000))
+    comorbidades = Column(String(1000))
+    plano_base = Column(String(500))
+    valor_plano = Column(Float)
 
     dCalendar = relationship("DCalendar", back_populates="wellhub")
     

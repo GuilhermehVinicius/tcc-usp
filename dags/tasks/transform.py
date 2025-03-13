@@ -103,6 +103,21 @@ def transformar_acessos(acessos, clientes):
     return acessos[["id_acesso", "id_cliente", "data_acesso", "faixa_horario"]].drop_duplicates()
 
 
+def transformar_wellhub(wellhub):
+    wellhub = wellhub.rename(columns={'date': 'data', 
+                                      'name': 'nome', 
+                                      'address':'endereco',
+                                      'services':'servicos',
+                                      'comorbidities':'comorbidades',
+                                      'base_plan':'plano_base',
+                                      'values':'valor_plano'})
+    
+    wellhub["id_gym"] = wellhub.index + 1
+
+    return wellhub
+    
+
+
 def criar_calendario():
 
     # DataFrame de calendário
@@ -120,10 +135,13 @@ def criar_calendario():
     return dCalender
 
 
-def transform(clientes, acessos):
+
+
+def transform(clientes, acessos, wellhub):
     """Função principal que chama as transformações de clientes e acessos"""
     clientes_transformados = transformar_clientes(clientes)
     acessos_transformados = transformar_acessos(acessos, clientes_transformados)
+    wellhub_transformados = transformar_wellhub(wellhub)
     calendario_criado = criar_calendario()
 
-    return clientes_transformados, acessos_transformados, calendario_criado
+    return clientes_transformados, acessos_transformados, wellhub_transformados, calendario_criado

@@ -31,7 +31,8 @@ with DAG("etl_csv_to_dw",
         python_callable=lambda: load(
             clientes_transformados=transform(*extract())[0],
             acessos_transformados=transform(*extract())[1],
-            calendario_criado =transform(*extract())[2]
+            wellhub_transformados=transform(*extract())[2],
+            calendario_criado =transform(*extract())[3]
         )
     )
 

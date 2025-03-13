@@ -4,7 +4,7 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 hook = PostgresHook(postgres_conn_id="postgres_dw")
 engine_dw = hook.get_sqlalchemy_engine()
 
-def load(clientes_transformados, acessos_transformados, calendario_criado):
+def load(clientes_transformados, acessos_transformados, wellhub_transformados, calendario_criado):
     
     create_tables()
 
@@ -12,6 +12,7 @@ def load(clientes_transformados, acessos_transformados, calendario_criado):
     STATIC_TABLES = {
         "dClientes": clientes_transformados,
         "dCalendar": calendario_criado,
+        "dGymWellhub": wellhub_transformados,
         "fAcessos": acessos_transformados
     }
 
