@@ -103,7 +103,7 @@ def transformar_acessos(acessos, clientes):
     return acessos[["id_acesso", "id_cliente", "data_acesso", "faixa_horario"]].drop_duplicates()
 
 
-def transformar_wellhub(wellhub):
+def transformar_wellhub(wellhub,servicos_wellhub):
     wellhub = wellhub.rename(columns={'date': 'data', 
                                       'name': 'nome', 
                                       'address':'endereco',
@@ -112,7 +112,29 @@ def transformar_wellhub(wellhub):
                                       'base_plan':'plano_base',
                                       'values':'valor_plano'})
     
+
     wellhub["id_gym"] = wellhub.index + 1
+
+    # Dividir os valores separados por vírgula em listas
+    wellhub['servicos'] = wellhub['servicos'].str.split(',')
+    wellhub['comorbidades'] = wellhub['comorbidades'].str.split(',')
+
+    # Usar o método explode para transformar as listas em linhas separadas
+    wellhub = wellhub.explode('servicos').explode('comorbidades')
+
+    wellhub = wellhub.reset_index(drop=True)    
+
+    wellhub["id_registro"] = wellhub.index + 1
+
+    #servicos_wellhub['servicos'] = servicos_wellhub['servicos'].str.split(',')
+
+    #servicos_wellhub = servicos_wellhub.explode('servicos')
+
+    wellhub = wellhub.merge(servicos_wellhub, left_on="servicos", right_on="servicos", how="left")
+
+    #print(servicos_wellhub)
+
+    #servicos_wellhub.to_csv("include/servicos_wellhub.csv",sep=",")
 
     return wellhub
     
@@ -137,11 +159,11 @@ def criar_calendario():
 
 
 
-def transform(clientes, acessos, wellhub):
+def transform(clientes, acessos, wellhub,servicos_wellhub):
     """Função principal que chama as transformações de clientes e acessos"""
     clientes_transformados = transformar_clientes(clientes)
     acessos_transformados = transformar_acessos(acessos, clientes_transformados)
-    wellhub_transformados = transformar_wellhub(wellhub)
+    wellhub_transformados = transformar_wellhub(wellhub,servicos_wellhub)
     calendario_criado = criar_calendario()
 
     return clientes_transformados, acessos_transformados, wellhub_transformados, calendario_criado

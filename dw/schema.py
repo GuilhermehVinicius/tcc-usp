@@ -37,11 +37,13 @@ class DCalendar(Base):
 
 class DGymWellhub(Base):
     __tablename__ = 'dGymWellhub'
-    id_gym = Column(Integer, autoincrement=True, primary_key=True)
+    id_registro = Column(Integer, autoincrement=True, primary_key=True)
+    id_gym = Column(Integer)
     data = Column(Date, ForeignKey("dCalendar.date"), nullable=False)
     nome = Column(String(1000))
     endereco = Column(String(1000))
     servicos = Column(String(1000))
+    grupo = Column(String(1000))
     comorbidades = Column(String(1000))
     plano_base = Column(String(500))
     valor_plano = Column(Float)

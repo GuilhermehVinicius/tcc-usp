@@ -33,3 +33,5 @@ def load(clientes_transformados, acessos_transformados, wellhub_transformados, c
 
     #acessos_transformados.to_csv("include/acessos_transformados.csv",sep=",")
 
+    #wellhub_transformados.to_csv("include/wellhub_transformados.csv",sep=",")
+

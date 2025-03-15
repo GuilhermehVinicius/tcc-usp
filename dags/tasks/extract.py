@@ -28,6 +28,7 @@ def extract():
 
     wellhub = pd.read_csv(f"{caminho}gym-wellhub.csv", sep=",")
 
+    servicos_wellhub = pd.read_csv(f'{caminho}servicos.csv', sep=",")
 
 
-    return clientes, acessos, wellhub
+    return clientes, acessos, wellhub, servicos_wellhub
