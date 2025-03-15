@@ -11,7 +11,7 @@ def load(clientes_transformados, acessos_transformados, wellhub_transformados, c
     # Processamento das tabelas estáticas
     STATIC_TABLES = {
         "dClientes": clientes_transformados,
-        "dCalendar": calendario_criado,
+        "dCalendario": calendario_criado,
         "dGymWellhub": wellhub_transformados,
         "fAcessos": acessos_transformados
     }

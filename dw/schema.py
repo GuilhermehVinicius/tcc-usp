@@ -22,24 +22,24 @@ class DClientes(Base):
     acessos = relationship("FAcessos", back_populates="cliente")
     
 
-class DCalendar(Base):
-    __tablename__ = 'dCalendar'
-    date = Column(Date, primary_key=True)
-    year = Column(String(4), nullable=False)
-    month = Column(String(2))
-    nameMonth = Column(String(20))
-    quarter = Column(String(3))
-    day = Column(Integer)
-    weekDay = Column(String(100))
+class DCalendarioio(Base):
+    __tablename__ = 'dCalendario'
+    data = Column(Date, primary_key=True)
+    ano = Column(String(4), nullable=False)
+    mes = Column(String(2))
+    nome_mes = Column(String(20))
+    trimestre = Column(String(3))
+    dia = Column(Integer)
+    dia_semana = Column(String(100))
 
-    acessos = relationship("FAcessos", back_populates="dCalendar")
-    wellhub = relationship("DGymWellhub", back_populates="dCalendar")
+    acessos = relationship("FAcessos", back_populates="dCalendario")
+    wellhub = relationship("DGymWellhub", back_populates="dCalendario")
 
 class DGymWellhub(Base):
     __tablename__ = 'dGymWellhub'
     id_registro = Column(Integer, autoincrement=True, primary_key=True)
     id_gym = Column(Integer)
-    data = Column(Date, ForeignKey("dCalendar.date"), nullable=False)
+    data = Column(Date, ForeignKey("dCalendario.data"), nullable=False)
     nome = Column(String(1000))
     endereco = Column(String(1000))
     servicos = Column(String(1000))
@@ -48,21 +48,23 @@ class DGymWellhub(Base):
     plano_base = Column(String(500))
     valor_plano = Column(Float)
 
-    dCalendar = relationship("DCalendar", back_populates="wellhub")
+    dCalendario = relationship("DCalendario", back_populates="wellhub")
     
 
 class FAcessos(Base):
     __tablename__ = 'fAcessos'
     id_acesso  = Column(String(500), primary_key=True)
     id_cliente = Column(String(500), ForeignKey("dClientes.id_cliente"))
-    data_acesso = Column(Date, ForeignKey("dCalendar.date"))
+    data_acesso = Column(Date, ForeignKey("dCalendario.data"))
     faixa_horario = Column(String(500), nullable=False)
 
-    dCalendar = relationship("DCalendar", back_populates="acessos")
+    dCalendario = relationship("DCalendario", back_populates="acessos")
     cliente = relationship("DClientes", back_populates="acessos")
 
 def create_tables():
+    Base.metadata.drop_all(bind=engine_dw)
     Base.metadata.create_all(bind=engine_dw)
+    
 
 if __name__ == "__main__":
     create_tables()

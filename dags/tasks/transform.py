@@ -145,13 +145,13 @@ def criar_calendario():
     # DataFrame de calendário
     datas = pd.date_range(start="2024-01-01", end="2025-12-31")
     dCalender = pd.DataFrame({
-        "date": datas,
-        "year": datas.year,
-        "month": datas.month,
-        "nameMonth": datas.strftime("%b").str.capitalize(),
-        "quarter": datas.quarter.map(lambda x: f"T{x}"),
-        "day": datas.day,
-        "weekDay": datas.strftime("%A").str.capitalize(),
+        "data": datas,
+        "ano": datas.year,
+        "mes": datas.month,
+        "nome_mes": datas.strftime("%b").str.capitalize(),
+        "trimestre": datas.quarter.map(lambda x: f"T{x}"),
+        "dia": datas.day,
+        "dia_semana": datas.strftime("%A").str.capitalize(),
     })
 
     return dCalender
