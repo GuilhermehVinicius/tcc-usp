@@ -1,5 +1,4 @@
 import pandas as pd
-import uuid
 import numpy as np
 
 def normalize_text(text_series):
@@ -13,30 +12,29 @@ def normalize_text(text_series):
 def transformar_clientes(clientes):
     """Transforma o DataFrame de clientes, realizando limpeza, normalização e enriquecimento de dados."""
     
-
-
     # Normalizar nome
     clientes["Nome"] = normalize_text(clientes["Nome"])
 
     # Ordenar e remover duplicatas
     clientes = clientes.sort_values(by=["Nome", "Data de cadastro"]).drop_duplicates(subset=["Nome"], keep="first")
 
+    # Normalizar contrato
+    clientes["Contrato"] = normalize_text(clientes["Contrato"])
+
     # Lista de funcionários para exclusão
     FUNCIONARIOS = {
-        "douglas taveira regano", "bruno ferrari funchal", "lorena dos santos silva",
+        "alvaro gomes mateus neto", "douglas taveira regano", "bruno ferrari funchal", "lorena dos santos silva",
         "neydson domingos da silva", "jessica lane pereira", "jaqueline moreira pessoni",
         "loislene nascimento silva", "breno batista diniz", "samella lorranneh maia costa",
         "ana laura de freitas"
     }
+
     clientes = clientes[~clientes["Nome"].isin(FUNCIONARIOS)]
 
     # Criar endereço completo
     clientes["Endereco completo"] = clientes[["Endereco", "Bairro", "Cidade"]].astype(str).agg(", ".join, axis=1).replace(", , ", "", regex=True)
 
     clientes.loc[clientes["Endereco completo"] != "", "Endereco completo"] += "-SP, Brasil"
-
-    # Normalizar contrato
-    clientes["Contrato"] = normalize_text(clientes["Contrato"])
 
     # Converter datas
     clientes["Data de nascimento"] = pd.to_datetime(clientes["Data de nascimento"], errors="coerce")
@@ -50,9 +48,9 @@ def transformar_clientes(clientes):
     clientes["Faixa etaria"] = pd.cut(clientes["Idade"], bins=faixas, labels=labels, right=True)
 
     # Criar IDs
-    clientes["ID Alunos"] = clientes.index + 1
+    clientes["id_cliente"] = clientes.index + 1
 
-    clientes = clientes.rename(columns={'ID Alunos': 'id_cliente', 'Nome': 'nome', 'Contrato': 'contrato', 'Situação': 'situacao',
+    clientes = clientes.rename(columns={'Nome': 'nome', 'Contrato': 'contrato', 'Situação': 'situacao',
                                         'Data de cadastro': 'data_cadastro', 'Sexo': 'sexo', 'Endereco completo': 'endereco', 
                                         'Idade': 'idade', 'Faixa etaria': 'faixa_etaria'})
 
@@ -66,9 +64,6 @@ def transformar_acessos(acessos, clientes):
     
     # Normalizar nomes nos acessos
     acessos["Cliente"] = normalize_text(acessos["Cliente"])
-
-    # Remover funcionários
-    #acessos = acessos[acessos["Cliente"].isin(set(clientes["nome"]))]
 
     # Filtrar acessos liberados
     acessos = acessos[acessos["Acesso liberado"] != "Não"]
@@ -126,15 +121,7 @@ def transformar_wellhub(wellhub,servicos_wellhub):
 
     wellhub["id_registro"] = wellhub.index + 1
 
-    #servicos_wellhub['servicos'] = servicos_wellhub['servicos'].str.split(',')
-
-    #servicos_wellhub = servicos_wellhub.explode('servicos')
-
     wellhub = wellhub.merge(servicos_wellhub, left_on="servicos", right_on="servicos", how="left")
-
-    #print(servicos_wellhub)
-
-    #servicos_wellhub.to_csv("include/servicos_wellhub.csv",sep=",")
 
     return wellhub
     
@@ -143,8 +130,8 @@ def transformar_wellhub(wellhub,servicos_wellhub):
 def criar_calendario():
 
     # DataFrame de calendário
-    datas = pd.date_range(start="2024-01-01", end="2025-12-31")
-    dCalender = pd.DataFrame({
+    datas = pd.date_range(start="2023-10-01", end="2025-12-31")
+    calender = pd.DataFrame({
         "data": datas,
         "ano": datas.year,
         "mes": datas.month,
@@ -154,7 +141,7 @@ def criar_calendario():
         "dia_semana": datas.strftime("%A").str.capitalize(),
     })
 
-    return dCalender
+    return calender
 
 
 
